@@ -12,7 +12,7 @@ $.getJSON("/articles", function(data) {
     // For each one
     for (var i = 0; i < data.length; i++) {
       // Display the apropos information on the page
-      $("#s-articles").append("<div class='card ' " + "data-id=" + data[i]._id  + ">" + "<div class='card-header bg-primary text-white'><p id='title" + data[i]._id  + "'>" + data[i].title + "</p><a class='btn btn-success text-white float-right delete' " + "data-id=" + data[i]._id  +  " role='button'>Delete</a>" + "</p></p><a class='btn btn-warning text-white float-right comment' " + "data-id=" + data[i]._id  +  " role='button'>Comment</a></p></div>" + "<div class='card-body'><p id='body" + data[i]._id  + "'>" + data[i].body + "</p></div></div><br />");
+      $("#s-articles").append("<div class='card ' " + "data-id=" + data[i]._id  + ">" + "<div class='card-header bg-primary text-white'><p id='title" + data[i]._id  + "'>" + data[i].title + "</p><a class='btn btn-success text-white float-right delete' " + "data-id=" + data[i]._id  +  " role='button'>Delete</a>" + "<a class='btn btn-warning text-white float-right comment' " + "data-id=" + data[i]._id  +  " role='button'>Comment</a></p>" + "</p><a class='btn btn-danger text-white float-right a-comment' " + "data-id='" + data[i].title  +  "' role='button'>All Comments</a></p></div><div class='card-body'><p id='body" + data[i]._id  + "'>" + data[i].body + "</p></div></div><br />");
 // "<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
     }
   });
@@ -150,6 +150,7 @@ $(document).on("click", "#savenote", function() {
     .done(function(data) {
       // Log the response
       console.log(data);
+      
       // Empty the notes section
       $("#notes").empty();
     });
@@ -158,3 +159,52 @@ $(document).on("click", "#savenote", function() {
   // $("#titleinput").val("");
   $("#bodyinput").val("");
 });
+
+
+
+
+$(document).on("click", ".a-comment", function() {
+  // Empty the notes from the note section
+  $("#all-comments").empty();
+  // Save the id from the p tag
+  var thisId = $(this).attr("data-id");
+
+  // Now make an ajax call for the Article
+  $.ajax({
+    method: "GET",
+    url: "/notes/" + thisId
+  })
+    // With that done, add the note information to the page
+    .done(function(data) {
+      console.log(data);
+      // The title of the article
+      // '<div class="card " <div class="card-header bg-primary text-white">'
+
+      // '<a class="btn btn-success text-white float-right save" data-id=' + data[i]._id  +  ' role="button">Delete</a></div><div class="card-body">'
+      // '<p id="c-body' + data[i]._id  + '">' + data[i].link + '</p></div></div><br />'
+
+
+      
+      $("#all-comments").append('<div class="card "> <div class="card-header bg-success text-white"><h4>Comments for "' + thisId + '"</h4></div>');
+
+      for (var i = 0; i < data.length; i++){
+
+      $("#all-comments").append("<div class='card-body'><p id='c-body' data-id='" + data[i]._id + "'>" + data[i].body + "</p><a class='btn btn-success text-white a-delete' data-id='" + data[i]._id  +  "' role='button'>Delete</a></div></div>");
+
+      }
+
+      // An input to enter a new title
+      // $("#all-comments").append("<input id='titleinput' name='title' >");
+      // A textarea to add a new note body
+      // $("#all-comments").append("<textarea id='bodyinput' name='body'></textarea>");
+      // A button to submit a new note, with the id of the article saved to it
+      // $("#all-comments").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
+
+      // If there's a note in the article
+      // if (data.note) {
+        // Place the title of the note in the title input
+        // $("#titleinput").val(data.note.title);
+        // Place the body of the note in the body textarea
+        // $("#bodyinput").val(data.note.body);
+      });
+    });
