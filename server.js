@@ -207,7 +207,21 @@ app.post("/saved", function(req, res) {
       });
   });
 
+  app.delete("/notes", function(req, res) {
+    // Create a new note and pass the req.body to the entry
 
+    db.Note
+      .deleteOne(req.body)
+     
+      .then(function(dbSave) {
+        // If we were able to successfully update an Article, send it back to the client
+        res.json(dbSave);
+      })
+      .catch(function(err) {
+        // If an error occurred, send it to the client
+        res.json(err);
+      });
+  });
 
 
 

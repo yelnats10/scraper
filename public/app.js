@@ -208,3 +208,34 @@ $(document).on("click", ".a-comment", function() {
         // $("#bodyinput").val(data.note.body);
       });
     });
+
+
+
+    $(document).on("click", ".a-delete", function() {
+      // Grab the id associated with the article from the submit button
+      var thisId = $(this).attr("data-id");
+    // console.log($("#title" + thisId).text());
+      // Run a POST request to change the note, using what's entered in the inputs
+      $.ajax({
+        method: "DELETE",
+        url: "/notes",
+        data: {
+          // Value taken from title input
+          _id: thisId
+          // Value taken from note textarea
+          // body: $("#c-body" + thisId).text()
+        }
+      })
+        // With that done
+        .done(function(data) {
+          // Log the response
+          console.log(data);
+          location.reload();
+          // Empty the notes section
+          // $("#notes").empty();
+        });
+    
+      // Also, remove the values entered in the input and textarea for note entry
+      // $("#titleinput").val("");
+      // $("#bodyinput").val("");
+    });
