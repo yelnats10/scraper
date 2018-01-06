@@ -12,9 +12,8 @@ var PORT = process.env.PORT || 8080;
 
 var app = express();
 
-var localDB = "mongodb://localhost/ScraperHW";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/ScraperHW";
 
-// MONGODB_URI = process.env.MONGODB_URI ||
 // Use morgan logger for logging requests
 app.use(logger("dev"));
 // Use body-parser for handling form submissions
@@ -25,17 +24,9 @@ app.use(express.static("public"));
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-
-if (process.env.MONGODB_URI){
-  mongoose.connect(process.env.MONGODB_URI);
-} else {
-  mongoose.connect(localDB);
-}
-
-
-// mongoose.connect(MONGODB_URI, {
-//   useMongoClient: true
-// });
+mongoose.connect(MONGODB_URI, {
+  useMongoClient: true
+});
 
 // Routes
 
